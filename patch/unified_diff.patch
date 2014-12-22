@@ -1,0 +1,64 @@
+commit df738b779d424f7879888a533b5e7225c7f9c24b
+Author: CODeRUS <coderusinbox@gmail.com>
+Date:   Tue Dec 23 00:26:55 2014 +0500
+
+    Using old switcher loading style
+    
+    Loading... text was removed from jolla translations, so only in english
+    now
+
+diff --git a/switcher/Switcher.qml b/switcher/Switcher.qml
+index 97daa7e..088c6db 100644
+--- a/switcher/Switcher.qml
++++ b/switcher/Switcher.qml
+@@ -271,26 +271,24 @@ MouseArea {
+ 
+                 LauncherIcon {
+                     size: Theme.iconSizeMedium
+-                    anchors.centerIn: parent
+-                    scale: switcherRoot.columns == 2 ? 1 : 2/3
++                    anchors.horizontalCenter: parent.horizontalCenter
++                    y: Theme.paddingLarge
++                    width: switcherRoot.columns == 2 ? Theme.itemSizeSmall : Theme.itemSizeSmall * 2 / 3
++                    height: width
+                     icon: launcherItem.iconId
+-                    opacity: busyIndicator.opacity
++                    opacity: 0.4
+                     layer.effect: undefined
+-                    BusyIndicator {
+-                        id: busyIndicator
+-                        property bool ready
+-
+-                        anchors.centerIn: parent
+-                        color: Theme.primaryColor
+-                        size: BusyIndicatorSize.Large
+-                        running: ready && dashboard.coversVisible
+-
+-                        Timer {
+-                            running: true
+-                            interval: 400
+-                            onTriggered: parent.ready = true
+-                        }
+-                    }
++                }
++                Label {
++                    id: loadingText
++                    opacity: 0
++                    anchors.horizontalCenter: parent.horizontalCenter
++                    y: parent.height/2
++                    font.pixelSize: switcherRoot.columns == 2 ? Theme.fontSizeMedium
++                                                              : Theme.fontSizeExtraSmall
++                    //: Shown in cover if an application is loading slowly
++                    text: "Loading..."
++                    Behavior on opacity { FadeAnimation {} }
+                 }
+                 Timer {
+                     property int count
+@@ -301,6 +299,7 @@ MouseArea {
+                         count++
+                         // Note: Link has pid -1.
+                         if (count == 1) {
++                        	loadingText.opacity = 0.4
+                             pid = jollaSystemInfo.matchingPidForCommand(null, model.launcherItem.exec)
+                         } else if (pid < 0 || (pid == 0 && count == 4) || (pid > 0 && (count == 20 || jollaSystemInfo.matchingPidForCommand([ pid ], model.launcherItem.exec) != pid))) {
+                             // Remove pending window and fixup homescreen position after a timeout or if the process dies

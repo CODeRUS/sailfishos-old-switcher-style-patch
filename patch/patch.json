@@ -1,0 +1,8 @@
+{
+    "name": "Return old appliation loading cover",
+    "description": "Patch returning old application loading cover with no spinning circle",
+    "category": "homescreen",
+    "infos": {
+        "maintainer": "coderus"
+    }
+}
